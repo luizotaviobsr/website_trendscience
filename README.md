@@ -282,6 +282,73 @@ Imagens JPG (`cat-*`, `pilar-*`, `hero-*`, `origins-*`, `bancada.jpg`, `represen
 
 Fontes (`assets/fonts/`) e vendor JS (`assets/vendor/`) — se o codebase alvo já tiver alternativas (Tailwind + Framer Motion, por exemplo), não são necessários. Se recriar em Webflow, manter.
 
+## Changelog recente (contexto adicional para o desenvolvedor)
+
+Alterações feitas desde a última versão do handoff:
+
+### Copy (textos finais)
+- **Hero H1:** "A ciência de facilitar o trabalho de quem cuida." (era "Apoiamos o médico. Acompanhamos o tratamento.")
+- **Hero descrição:** "Grupo de representação médica. Comercialização, distribuição e importação de medicamentos usados na medicina integrativa, em 27 estados, com mais de 8.000 pacientes acompanhados." (font-size 20px)
+- **Hero contadores (3 blocos que ciclam via JS no mesmo slot):** `4.500+ Médicos atendidos` · `8.000+ Pacientes acompanhados` · `27 Estados brasileiros` (era Médicos/Estados/Cidades)
+- **Bloco 2 (categorias) H2:** "Categorias do portfólio" (era "Organizado como o médico pensa.")
+- **Botão "Ver portfólio completo"** removido do bloco 2.
+- **Bloco 2b (pilares escuros — 4 cards):** textos de Rastreabilidade / Entrega / Suporte / Portfólio atualizados (versões mais longas e específicas).
+- **Bloco 3 (scroll-triggered Passo 1):** "Se você já levou para casa uma preocupação que não era clínica..." (era "duvidar de cada decisão logística")
+- **Bloco "Cuidamos de que nada falte..."** — texto agora em 2 parágrafos separados por `<br/><br/>`, começando com "A Trendscience é um grupo de representação médica..."
+- **Bloco 3 cards brancos** renomeado para **"O que construímos por trás do fornecimento."** (era "O que sustenta a nossa entrega.") com títulos Tecnologia própria / Curadoria técnica / Educação médica e textos novos. **Botão "Nosso Propósito" ocultado** com `style="display:none !important"` (mantido no DOM, invisível).
+- **Bloco Origens** — textos de abertura, Nacional e Importado reescritos. `max-width` do `.origins__title` aumentado para **1300px**.
+- **Larguras de texto:** `.pillars.pillars--three .pillar__desc { max-width: 52ch }` (era 34ch).
+
+### Imagens (novas — geradas em série cinematográfica low-key)
+Substituem as fotos originais do bloco "O que construímos por trás do fornecimento":
+- `assets/pilar-tecnologia.jpg` — monitor widescreen em ângulo baixo três-quartos sobre bancada de aço escovado, dashboard escuro como única fonte de luz, LED vermelho ao fundo, DoF rasa e grão fotográfico.
+- `assets/pilar-curadoria.jpg` — mãos com luvas de nitrila azul, frasco âmbar sob luz superior, prancheta em branco, bandeja de frascos ao fundo.
+- `assets/pilar-educacao.jpg` — auditório escuro visto de cima/atrás, plateia em silhueta em primeiro plano, palco com tribuna e tela de projeção iluminados por feixe frio.
+
+Todas 3:4 retrato, gradação azul-acinzentada fria idêntica, `object-fit: cover` no card com `aspect-ratio: 3/4`, `border-radius: 0`, sem `box-shadow`.
+
+### Mobile (hero + contadores + footer)
+- Hero mobile: `.wrapper_hero` `padding: 88px 20px 32px; justify-content: flex-end`. Título e parágrafo ancorados no fundo.
+- Contadores no mobile: **1 slot único empilhado** (comportamento original), com `.first/.second/.third` em `position: absolute; inset: 0` dentro de `.hero_list { height: 88px; margin: auto 0 }` — o JS existente cicla via classe.
+- **Botão "Como funciona"** removido do hero.
+- **Footer mobile:** menu vertical em coluna única (não grid 2col). Override em `@media (max-width: 767px)` da segunda inline `<style>` do `<head>`, forçando `flex-direction: column`. Espaçamento entre menu-items: `gap: 4px`; entre título e menu: 8px preservado.
+
+### Cor / marca
+- Big wordmark do footer: `fill="#0A4547"` (Petrol 700) dentro do próprio SVG `assets/trendscience-wordmark.svg`.
+- CTAs padronizados para "Fale Conosco".
+
+### Navegação (menu final)
+
+**Header desktop e menu mobile** — 5 itens agrupados à direita + CTA:
+
+| Label | Âncora | Bloco alvo |
+|---|---|---|
+| Home | `#home` | Hero |
+| Portfólio | `#portfolio` | Categorias do portfólio |
+| O que fazemos | `#o-que-fazemos` | Pilares escuros (4 cards) |
+| Sobre | `#sobre` | Bloco "Cuidamos de que nada falte…" |
+| Contato | `#contato` | Bloco CTA final "A ciência de facilitar…" |
+| **CTA "Fale Conosco"** | `https://wa.me/5561998980588` (target `_blank`) | WhatsApp |
+
+- Header: logo à esquerda (com `margin-right: auto`), 5 links + CTA agrupados à direita (`.header .flexbox.header_flex { display:flex; justify-content:space-between }`).
+- Todos os 5 blocos-alvo têm `id="…"` no HTML e `scroll-margin-top: 80px` (64px mobile) para não ficar embaixo do header fixo.
+- **Não usar `scroll-behavior: smooth` no CSS** — o site usa **Lenis** (`assets/vendor/lenis.min.js`) para smooth scroll, e os dois conflitam causando trava/lag na rolagem. Deixar apenas o Lenis.
+
+**Footer coluna "Descubra":** Home / Portfólio / O que fazemos / Sobre / Contato (mesmas âncoras). "Provas", "Notícias" e "FAQ" ficaram ocultos (`display:none`) — reativar se as páginas forem criadas.
+
+### Contato (dados finais)
+
+- **WhatsApp (todos os CTAs "Fale Conosco"):** `https://wa.me/5561998980588` — target `_blank` + `rel="noopener"`.
+- **Telefone (footer):** `+55 61 99898-0588` com `href="tel:+5561998980588"`.
+- **E-mail (footer):** `comercial@trendscience.com.br` em texto plain + `href="mailto:comercial@trendscience.com.br"` (removida a obfuscação Cloudflare que dependia de `email-decode.min.js`).
+- **Instagram:** `https://www.instagram.com/trendscience.br/` (target `_blank`).
+
+### Outros
+- Renomeação `Trendscience.html → index.html`; todas as ~150 referências internas viraram `href="#"`.
+- Ícones `+` do FAQ agora SVG inline (bypass do carregamento externo).
+- Script Cloudflare `email-decode.min.js` só funciona sob proxy Cloudflare completo — remover se hospedar fora, ou substituir o `[email protected]` obfuscado por texto simples/formulário.
+- Alinhamento do footer: `.footer .flexbox_footer, .footer .last_line { margin: 0 !important }` para neutralizar margens duplicadas do webflow.css.
+
 ## Recommended stack (para Genspark Code / desenvolvedor externo)
 
 - **Framework:** Next.js 14 App Router
