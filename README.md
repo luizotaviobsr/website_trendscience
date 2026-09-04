@@ -262,17 +262,21 @@ Cuidado: o wordmark do footer sempre 100% da largura do container do footer (lar
 4. **Header logo:** largura fixa via CSS var `--logo-w` (tweak): desktop 200px, mobile 120px.
 5. **Botão "Como funciona"** removido do hero — não incluir.
 6. **Copy final dos CTAs:** todos "Fale Conosco" (não "Como funciona", não "Fale conosco" minúsculo).
+7. **Ícones do FAQ (`+`):** os 5 `<img src="assets/icons/plus.svg">` dentro de `.plus_icon` foram substituídos por **SVG inline** (paths idênticos ao arquivo original). Motivo: o preview embedded falhava ao carregar o SVG externo com `naturalWidth: 0`, deixando os 5 quadrados cinzas do FAQ vazios. Solução robusta: inline SVG bypassa qualquer caching/parsing quirk. **Ao portar:** use um componente `<PlusIcon />` do lucide-react ou renderize o SVG inline direto no JSX.
+8. **Renomeação para `index.html`:** o arquivo principal agora se chama `index.html` (era `Trendscience.html`). Todas as ~150+ referências internas `href="Trendscience.html"` foram substituídas por `href="#"` — o site é single-page e esses hrefs eram placeholders. **Ao portar:** substituir por rotas reais (`href="/portfolio"`, `href="/contato"` etc.) quando as páginas existirem, ou manter como âncoras internas (`href="#more"`, `#faq`, etc.).
+9. **Remover script Cloudflare:** o `<script src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js">` só funciona sob proxy Cloudflare completo. Em Worker isolado ou hosting alternativo, dá 404 (não crítico, só decodifica o email obfuscado do footer). Sugestão: substituir o `[email protected]` obfuscado do footer por texto simples ou um formulário de contato real.
 
 ## Files
 
 Arquivos incluídos neste handoff:
 
-- `Trendscience.html` — HTML principal (referência do site inteiro)
-- `assets/trendscience-wordmark.svg` — big wordmark do footer (com cor final `#0A4547`)
+- `index.html` — HTML principal (referência do site inteiro). Já com todas as fixes: ícones FAQ inline, links single-page `#`, footer alinhado, cor final do wordmark.
+- `assets/trendscience-wordmark.svg` — big wordmark do footer (com `fill="#0A4547"`)
 - `assets/trendscience-logo.svg` — logo do header
 - `assets/trendscience-icon.svg` — apenas ícone
-- `assets/webflow.css` — CSS de referência (contém tokens e utilities Webflow — usar como referência, não copiar cru)
 - `assets/footer-redesign.css` — overrides do footer
+- `assets/icons/arrow.svg` — seta dos botões
+- `assets/icons/plus.svg` — ícone `+` do accordion FAQ (referência; no HTML já está inline)
 
 Imagens JPG (`cat-*`, `pilar-*`, `hero-*`, `origins-*`, `bancada.jpg`, `representante.jpg`) e ícones sociais **não estão empacotados** neste handoff (arquivos grandes). Solicitar do cliente ou reexportar do Figma. Lista completa acima em **Assets**.
 
